@@ -1,0 +1,156 @@
+import requests
+from bs4 import BeautifulSoup
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import json
+import os
+from groq import Groq  # Assuming use of Groq API for AI reasoning
+from apify_client import ApifyClient  # For integrating BizBuySell via Apify scraper API
+
+# Note: This is an updated conceptual AI agent script integrating BizBuySell via Apify's scraper API (since no official BizBuySell API exists).
+# Sign up at https://apify.com for an API key. Apify has a free tier, but usage may incur costs.
+# The script uses the real Apify actor 'acquistion-automation/bizbuysell-scraper'.
+# Fixed: startUrls should be an array of strings, not array of dicts.
+# Contact emails are not directly available; set to 'N/A'. For real messaging, use site forms or broker phones manually.
+# Replace placeholders with actual values.
+
+class BusinessAcquisitionAgent:
+    def __init__(self, groq_api_key, apify_api_key, email_username, email_password, sender_email):
+        self.groq_client = Groq(api_key=groq_api_key)
+        self.apify_client = ApifyClient(apify_api_key)
+        self.email_username = email_username
+        self.email_password = email_password
+        self.sender_email = sender_email
+        self.business_listings = []  # To store researched businesses
+
+    def perform_market_research(self, criteria):
+        """
+        Performs market research using Apify's BizBuySell scraper based on user-specified criteria 
+        (e.g., {'industry': 'restaurant', 'location': 'New York', 'max_price': 500000}).
+        Constructs search URL and runs the Apify actor to fetch listings.
+        """
+        print(f"Performing market research with criteria: {criteria}")
+        
+        # Construct BizBuySell search URL based on criteria
+        industry_query = criteria.get('industry', '').replace(' ', '%20')
+        location_query = criteria.get('location', '').replace(' ', '%20').replace(',', '%2C')
+        max_price = criteria.get('max_price', 1000000)
+        start_url = f"https://www.bizbuysell.com/businesses-for-sale/?q={industry_query}&l={location_query}&pmax={max_price}"
+        
+        # Apify actor input
+        run_input = {
+            "startUrls": [start_url],  # Fixed: array of strings
+            "maxItems": 10,  # Limit to top 10 for demo; adjust as needed
+            "includeRawHTML": False  # Set to True if need to parse HTML for more details
+        }
+        
+        # Run the Apify actor
+        actor_call = self.apify_client.actor('acquistion-automation/bizbuysell-scraper').call(run_input=run_input)
+        
+        if actor_call:
+            # Fetch the dataset items
+            dataset_items = self.apify_client.dataset(actor_call['defaultDatasetId']).list_items().items
+            
+            self.business_listings = []
+            for item in dataset_items:
+                self.business_listings.append({
+                    'title': item.get('TITLE', 'N/A'),
+                    'price': item.get('PRICE', 'N/A'),
+                    'description': item.get('INDUSTRY DETAILS', 'N/A'),
+                    'contact_email': 'N/A'  # Emails not provided; use broker phone or site form
+                })
+            
+            print(f"Found {len(self.business_listings)} businesses matching criteria.")
+        else:
+            print("Failed to run Apify actor.")
+
+    def make_recommendations(self):
+        """
+        Uses AI (Groq LLM) to analyze listings and make recommendations.
+        """
+        if not self.business_listings:
+            return "No businesses found to recommend."
+        
+        prompt = f"Analyze these business listings and recommend the top 3 for purchase based on potential ROI, market fit, and criteria. Listings: {json.dumps(self.business_listings)}"
+        
+        chat_completion = self.groq_client.chat.completions.create(
+            messages=[{"role": "user", "content": prompt}],
+            model="mixtral-8x7b-32768"  # Or use other models
+        )
+        
+        recommendations = chat_completion.choices[0].message.content
+        print("Recommendations:")
+        print(recommendations)
+        return recommendations
+
+    def send_automated_message(self, business_index, message_type, offer_amount=None):
+        """
+        Sends an automated email to the business owner. message_type can be 'request_docs' or 'make_offer'.
+        Note: Since direct emails are not available from listings, this is placeholder. In practice, use site contact forms.
+        """
+        if business_index >= len(self.business_listings):
+            raise IndexError("Invalid business index")
+        
+        business = self.business_listings[business_index]
+        recipient_email = business['contact_email']
+        
+        if recipient_email == 'N/A':
+            print("No contact email available; cannot send message.")
+            return
+        
+        if message_type == 'request_docs':
+            subject = "Request for Business Documentation"
+            body = f"Dear Owner,\n\nI am interested in your business '{business['title']}'. Could you please provide financial statements and other relevant docs?\n\nBest,\nYour Name"
+        elif message_type == 'make_offer':
+            if offer_amount is None:
+                raise ValueError("Offer amount required for making an offer")
+            subject = "Offer to Purchase Your Business"
+            body = f"Dear Owner,\n\nI would like to make an offer of ${offer_amount} for your business '{business['title']}'.\n\nBest,\nYour Name"
+        else:
+            raise ValueError("Invalid message type")
+        
+        # Send email (placeholder; won't work with 'N/A')
+        msg = MIMEMultipart()
+        msg['From'] = self.sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = subject
+        msg.attach(MIMEText(body, 'plain'))
+        
+        try:
+            server = smtplib.SMTP('smtp.gmail.com', 587)  # Adjust for your email provider
+            server.starttls()
+            server.login(self.email_username, self.email_password)
+            text = msg.as_string()
+            server.sendmail(self.sender_email, recipient_email, text)
+            server.quit()
+            print(f"Message sent to {recipient_email}")
+        except Exception as e:
+            print(f"Failed to send email: {e}")
+
+# Usage Example
+if __name__ == "__main__":
+    # Load credentials securely (e.g., from env vars)
+    groq_api_key = os.getenv('GROQ_API_KEY')  # Get from https://console.groq.com
+    apify_api_key = os.getenv('APIFY_API_KEY')  # Get from https://apify.com
+    email_username = os.getenv('EMAIL_USERNAME')
+    email_password = os.getenv('EMAIL_PASSWORD')
+    sender_email = 'your.email@example.com'
+    
+    agent = BusinessAcquisitionAgent(groq_api_key, apify_api_key, email_username, email_password, sender_email)
+    
+    # User-specified criteria
+    criteria = {
+        'industry': 'coffee shop',
+        'location': 'San Francisco, CA',
+        'max_price': 300000
+    }
+    
+    agent.perform_market_research(criteria)
+    recommendations = agent.make_recommendations()
+    
+    # Example: Send request for docs to the first recommended business (won't work due to 'N/A' email)
+    agent.send_automated_message(0, 'request_docs')
+    
+    # Example: Make an offer to the second one
+    agent.send_automated_message(1, 'make_offer', offer_amount=250000)
