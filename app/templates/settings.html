@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Settings — RV & MHP Finder{% endblock %}
+
+{% block content %}
+<h5 class="fw-bold mb-3"><i class="bi bi-gear me-2 text-primary"></i>Settings</h5>
+
+<div class="row g-4">
+  <div class="col-12 col-md-7">
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-header fw-semibold">Alert Preferences</div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label">Notification Email</label>
+            <input name="notification_email" type="email" class="form-control"
+                   value="{{ notification_email }}" placeholder="you@example.com">
+            <div class="form-text">Receive an email when new listings match your criteria.</div>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-6">
+              <label class="form-label">Min Price Alert</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input name="min_price_alert" type="number" class="form-control"
+                       value="{{ min_price_alert }}" placeholder="0">
+              </div>
+            </div>
+            <div class="col-6">
+              <label class="form-label">Max Price Alert</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input name="max_price_alert" type="number" class="form-control"
+                       value="{{ max_price_alert }}" placeholder="5000000">
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Min Lots for Alert</label>
+            <input name="min_lots_alert" type="number" class="form-control"
+                   value="{{ min_lots_alert }}" placeholder="e.g. 20">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">States to Watch (comma-separated, e.g. TX,FL,AZ)</label>
+            <input name="alert_states" class="form-control"
+                   value="{{ alert_states }}" placeholder="All states">
+          </div>
+          <button class="btn btn-primary">Save Settings</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col-12 col-md-5">
+
+    <div class="card shadow-sm mb-3">
+      <div class="card-header fw-semibold">Configuration</div>
+      <div class="card-body small text-muted">
+        <p>To configure API keys, scrape intervals, and access control, edit your <code>.env</code> file and restart the server.</p>
+        <table class="table table-sm mb-0">
+          <tbody>
+            <tr><td>Scrape interval</td><td>Every {{ config.SCRAPE_INTERVAL_HOURS }}h</td></tr>
+            <tr><td>Max per source</td><td>{{ config.MAX_LISTINGS_PER_SOURCE }} listings</td></tr>
+            <tr><td>Apify key</td>
+                <td>{% if config.APIFY_API_KEY %}<span class="text-success">Set</span>{% else %}<span class="text-muted">Not set</span>{% endif %}</td></tr>
+            <tr><td>Groq key</td>
+                <td>{% if config.GROQ_API_KEY %}<span class="text-success">Set</span>{% else %}<span class="text-muted">Not set</span>{% endif %}</td></tr>
+            <tr><td>Access password</td>
+                <td>{% if config.APP_PASSWORD %}<span class="text-success">Enabled</span>{% else %}<span class="text-muted">Disabled</span>{% endif %}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card shadow-sm mb-3">
+      <div class="card-header fw-semibold">Data &amp; Export</div>
+      <div class="card-body">
+        <a href="{{ url_for('main.export_csv') }}" class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-download"></i> Export All Listings (CSV)
+        </a>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold">API Access</div>
+      <div class="card-body small">
+        <p>JSON endpoints for mobile integration:</p>
+        <code class="d-block mb-1">GET /api/listings</code>
+        <code class="d-block mb-1">GET /api/listings/&lt;id&gt;</code>
+        <code class="d-block">GET /api/stats</code>
+        <p class="mt-2 text-muted">Supports <code>?state=TX&type=rv_park&page=1&per_page=50</code></p>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% block title %}{{ listing.title[:60] }} — RV & MHP Finder{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+  <a href="{{ url_for('main.listings') }}" class="text-decoration-none small">
+    <i class="bi bi-arrow-left"></i> Back to listings
+  </a>
+</div>
+
+<div class="row g-4">
+  <!-- main detail -->
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm mb-3">
+      {% if listing.images %}
+      <div id="photoCarousel" class="carousel slide" data-bs-ride="false">
+        <div class="carousel-inner">
+          {% for img in listing.images %}
+          <div class="carousel-item {% if loop.first %}active{% endif %}">
+            <img src="{{ img }}" class="d-block w-100 listing-hero" alt="photo {{ loop.index }}"
+                 onerror="this.parentElement.remove()">
+          </div>
+          {% endfor %}
+        </div>
+        {% if listing.images|length > 1 %}
+        <button class="carousel-control-prev" type="button" data-bs-target="#photoCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#photoCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+          <h5 class="mb-0 fw-bold">{{ listing.title }}</h5>
+          <button id="favBtn" class="btn btn-sm {% if listing.is_favorite %}btn-warning{% else %}btn-outline-secondary{% endif %}"
+                  data-id="{{ listing.id }}">
+            <i class="bi {% if listing.is_favorite %}bi-star-fill{% else %}bi-star{% endif %}"></i>
+            {% if listing.is_favorite %}Saved{% else %}Save{% endif %}
+          </button>
+        </div>
+
+        <div class="row g-2 mb-3">
+          {% if listing.price_text %}
+          <div class="col-auto">
+            <span class="badge bg-success fs-6">{{ listing.price_text }}</span>
+          </div>
+          {% endif %}
+          {% if listing.property_type %}
+          <div class="col-auto">
+            <span class="badge bg-primary">{{ listing.property_type|replace('_',' ')|title }}</span>
+          </div>
+          {% endif %}
+          <div class="col-auto">
+            <span class="badge bg-secondary">{{ listing.source }}</span>
+          </div>
+        </div>
+
+        {% if listing.location %}
+        <p class="mb-1"><i class="bi bi-geo-alt-fill text-danger"></i>
+          <a href="https://maps.google.com/?q={{ listing.location|urlencode }}" target="_blank" class="text-decoration-none">
+            {{ listing.location }}
+          </a>
+        </p>
+        {% endif %}
+
+        <!-- key metrics -->
+        <div class="row g-3 my-3">
+          {% if listing.lot_count %}
+          <div class="col-6 col-md-3">
+            <div class="text-center border rounded py-2">
+              <div class="fs-4 fw-bold text-primary">{{ listing.lot_count }}</div>
+              <div class="small text-muted">Lots / Sites</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if listing.acreage %}
+          <div class="col-6 col-md-3">
+            <div class="text-center border rounded py-2">
+              <div class="fs-4 fw-bold text-primary">{{ "%.1f"|format(listing.acreage) }}</div>
+              <div class="small text-muted">Acres</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if listing.cap_rate %}
+          <div class="col-6 col-md-3">
+            <div class="text-center border rounded py-2">
+              <div class="fs-4 fw-bold text-success">{{ "%.1f"|format(listing.cap_rate) }}%</div>
+              <div class="small text-muted">Cap Rate</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if listing.gross_revenue %}
+          <div class="col-6 col-md-3">
+            <div class="text-center border rounded py-2">
+              <div class="fs-5 fw-bold text-info">${{ "{:,.0f}".format(listing.gross_revenue) }}</div>
+              <div class="small text-muted">Gross Revenue</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if listing.net_income %}
+          <div class="col-6 col-md-3">
+            <div class="text-center border rounded py-2">
+              <div class="fs-5 fw-bold text-success">${{ "{:,.0f}".format(listing.net_income) }}</div>
+              <div class="small text-muted">Net Income</div>
+            </div>
+          </div>
+          {% endif %}
+          {% if listing.year_established %}
+          <div class="col-6 col-md-3">
+            <div class="text-center border rounded py-2">
+              <div class="fs-4 fw-bold">{{ listing.year_established }}</div>
+              <div class="small text-muted">Established</div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+
+        {% if listing.description %}
+        <hr>
+        <h6 class="fw-semibold">Description</h6>
+        <p class="text-muted" style="white-space: pre-wrap;">{{ listing.description }}</p>
+        {% endif %}
+
+        <div class="d-flex gap-2 mt-3">
+          {% if listing.url %}
+          <a href="{{ listing.url }}" target="_blank" class="btn btn-primary">
+            <i class="bi bi-box-arrow-up-right"></i> View Original Listing
+          </a>
+          {% endif %}
+          {% if listing.location %}
+          <a href="https://maps.google.com/?q={{ listing.location|urlencode }}" target="_blank"
+             class="btn btn-outline-secondary">
+            <i class="bi bi-map"></i> Map
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- notes -->
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold"><i class="bi bi-journal-text"></i> My Notes</div>
+      <div class="card-body">
+        <textarea id="notesArea" class="form-control mb-2" rows="4"
+                  placeholder="Add your private notes here…">{{ listing.notes or '' }}</textarea>
+        <button id="saveNotes" class="btn btn-sm btn-outline-primary" data-id="{{ listing.id }}">
+          Save Notes
+        </button>
+        <span id="notesSaved" class="text-success small ms-2 d-none">Saved!</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- sidebar -->
+  <div class="col-12 col-lg-4">
+    <!-- broker info -->
+    {% if listing.broker_name or listing.broker_phone or listing.broker_email %}
+    <div class="card shadow-sm mb-3">
+      <div class="card-header fw-semibold"><i class="bi bi-person-badge"></i> Broker / Contact</div>
+      <div class="card-body small">
+        {% if listing.broker_name %}
+        <div class="mb-1"><strong>{{ listing.broker_name }}</strong></div>
+        {% endif %}
+        {% if listing.broker_phone %}
+        <div class="mb-1"><a href="tel:{{ listing.broker_phone }}"><i class="bi bi-telephone"></i> {{ listing.broker_phone }}</a></div>
+        {% endif %}
+        {% if listing.broker_email %}
+        <div><a href="mailto:{{ listing.broker_email }}"><i class="bi bi-envelope"></i> {{ listing.broker_email }}</a></div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- listing meta -->
+    <div class="card shadow-sm mb-3">
+      <div class="card-header fw-semibold"><i class="bi bi-info-circle"></i> Details</div>
+      <div class="card-body small">
+        <table class="table table-sm mb-0">
+          <tbody>
+            <tr><td class="text-muted">Source</td><td>{{ listing.source }}</td></tr>
+            {% if listing.state %}<tr><td class="text-muted">State</td><td>{{ listing.state }}</td></tr>{% endif %}
+            {% if listing.zip_code %}<tr><td class="text-muted">Zip</td><td>{{ listing.zip_code }}</td></tr>{% endif %}
+            <tr><td class="text-muted">Added</td><td>{{ listing.created_at.strftime('%b %d, %Y') if listing.created_at else '—' }}</td></tr>
+            <tr><td class="text-muted">Updated</td><td>{{ listing.updated_at.strftime('%b %d, %Y') if listing.updated_at else '—' }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- status control -->
+    <div class="card shadow-sm">
+      <div class="card-header fw-semibold"><i class="bi bi-flag"></i> Status</div>
+      <div class="card-body">
+        <select id="statusSelect" class="form-select form-select-sm" data-id="{{ listing.id }}">
+          <option value="active" {% if listing.status == 'active' %}selected{% endif %}>Active</option>
+          <option value="watching" {% if listing.status == 'watching' %}selected{% endif %}>Watching</option>
+          <option value="contacted" {% if listing.status == 'contacted' %}selected{% endif %}>Contacted</option>
+          <option value="passed" {% if listing.status == 'passed' %}selected{% endif %}>Passed</option>
+          <option value="sold" {% if listing.status == 'sold' %}selected{% endif %}>Sold</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// favorite button on detail page
+const favBtn = document.getElementById('favBtn');
+if (favBtn) {
+  favBtn.addEventListener('click', () => {
+    const id = favBtn.dataset.id;
+    fetch(`/listing/${id}/favorite`, {method:'POST'})
+      .then(r => r.json())
+      .then(data => {
+        if (data.is_favorite) {
+          favBtn.className = 'btn btn-sm btn-warning';
+          favBtn.innerHTML = '<i class="bi bi-star-fill"></i> Saved';
+        } else {
+          favBtn.className = 'btn btn-sm btn-outline-secondary';
+          favBtn.innerHTML = '<i class="bi bi-star"></i> Save';
+        }
+      });
+  });
+}
+
+// notes
+const saveNotes = document.getElementById('saveNotes');
+if (saveNotes) {
+  saveNotes.addEventListener('click', () => {
+    const id = saveNotes.dataset.id;
+    const notes = document.getElementById('notesArea').value;
+    fetch(`/listing/${id}/notes`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({notes})
+    }).then(() => {
+      const el = document.getElementById('notesSaved');
+      el.classList.remove('d-none');
+      setTimeout(() => el.classList.add('d-none'), 2000);
+    });
+  });
+}
+
+// status
+const statusSelect = document.getElementById('statusSelect');
+if (statusSelect) {
+  statusSelect.addEventListener('change', () => {
+    const id = statusSelect.dataset.id;
+    fetch(`/listing/${id}/status`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({status: statusSelect.value})
+    });
+  });
+}
+</script>
+{% endblock %}
