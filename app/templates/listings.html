@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block title %}Listings — RV & MHP Finder{% endblock %}
+
+{% macro qlink(key, val) %}
+  {{ url_for('main.listings', **dict(args.to_dict(), **{key: val, 'page': 1})) }}
+{% endmacro %}
+
+{% block content %}
+<div class="row g-3">
+
+  <!-- sidebar filter -->
+  <div class="col-12 col-md-3 col-lg-2">
+    <form method="GET" action="{{ url_for('main.listings') }}" id="filterForm">
+      <div class="card shadow-sm mb-3">
+        <div class="card-header fw-semibold small py-2">Filters</div>
+        <div class="card-body p-2">
+
+          <div class="mb-2">
+            <input name="q" class="form-control form-control-sm" placeholder="Search..."
+                   value="{{ args.get('q','') }}">
+          </div>
+
+          <label class="form-label small mb-1">State</label>
+          <select name="state" class="form-select form-select-sm mb-2">
+            <option value="">All states</option>
+            {% for s in states %}
+            <option value="{{ s }}" {% if args.get('state') == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+          </select>
+
+          <label class="form-label small mb-1">Type</label>
+          <select name="type" class="form-select form-select-sm mb-2">
+            <option value="">All types</option>
+            <option value="rv_park" {% if args.get('type')=='rv_park' %}selected{% endif %}>RV Park</option>
+            <option value="mobile_home_park" {% if args.get('type')=='mobile_home_park' %}selected{% endif %}>Mobile Home Park</option>
+            <option value="mixed" {% if args.get('type')=='mixed' %}selected{% endif %}>Mixed</option>
+          </select>
+
+          <label class="form-label small mb-1">Source</label>
+          <select name="source" class="form-select form-select-sm mb-2">
+            <option value="">All sources</option>
+            {% for src in sources %}
+            <option value="{{ src }}" {% if args.get('source') == src %}selected{% endif %}>{{ src }}</option>
+            {% endfor %}
+          </select>
+
+          <label class="form-label small mb-1">Price Range</label>
+          <div class="input-group input-group-sm mb-1">
+            <span class="input-group-text">$</span>
+            <input name="min_price" type="number" class="form-control" placeholder="Min"
+                   value="{{ args.get('min_price','') }}">
+          </div>
+          <div class="input-group input-group-sm mb-2">
+            <span class="input-group-text">$</span>
+            <input name="max_price" type="number" class="form-control" placeholder="Max"
+                   value="{{ args.get('max_price','') }}">
+          </div>
+
+          <label class="form-label small mb-1">Min Lots</label>
+          <input name="min_lots" type="number" class="form-control form-control-sm mb-2"
+                 placeholder="e.g. 50" value="{{ args.get('min_lots','') }}">
+
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="favorites" value="1" id="favCheck"
+                   {% if args.get('favorites')=='1' %}checked{% endif %}>
+            <label class="form-check-label small" for="favCheck">Favorites only</label>
+          </div>
+
+          <label class="form-label small mb-1">Sort</label>
+          <select name="sort" class="form-select form-select-sm mb-3">
+            <option value="newest" {% if args.get('sort','newest')=='newest' %}selected{% endif %}>Newest first</option>
+            <option value="price_asc" {% if args.get('sort')=='price_asc' %}selected{% endif %}>Price ↑</option>
+            <option value="price_desc" {% if args.get('sort')=='price_desc' %}selected{% endif %}>Price ↓</option>
+            <option value="lots_desc" {% if args.get('sort')=='lots_desc' %}selected{% endif %}>Most lots</option>
+          </select>
+
+          <button class="btn btn-primary btn-sm w-100">Apply</button>
+          <a href="{{ url_for('main.listings') }}" class="btn btn-outline-secondary btn-sm w-100 mt-1">Clear</a>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- listing cards -->
+  <div class="col-12 col-md-9 col-lg-10">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+      <span class="text-muted small">{{ pagination.total }} listing{{ 's' if pagination.total != 1 }}</span>
+      <div class="btn-group btn-group-sm" role="group">
+        <button id="viewCards" class="btn btn-outline-secondary active" title="Card view">
+          <i class="bi bi-grid-3x3-gap"></i>
+        </button>
+        <button id="viewTable" class="btn btn-outline-secondary" title="Table view">
+          <i class="bi bi-table"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- card view -->
+    <div id="cardsContainer">
+      <div class="row g-3">
+        {% for listing in listings %}
+        <div class="col-12 col-sm-6 col-xl-4">
+          <div class="card h-100 shadow-sm listing-card position-relative">
+            {% if listing.images %}
+            <img src="{{ listing.images[0] }}" class="card-img-top listing-thumb" alt="listing photo"
+                 onerror="this.style.display='none'">
+            {% endif %}
+            <div class="card-body pb-2">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="badge src-badge src-{{ listing.source }}">{{ listing.source }}</span>
+                <button class="btn btn-link btn-sm p-0 fav-btn" data-id="{{ listing.id }}"
+                        title="Toggle favorite">
+                  <i class="bi {{ 'bi-star-fill text-warning' if listing.is_favorite else 'bi-star' }}"></i>
+                </button>
+              </div>
+              <h6 class="card-title lh-sm mb-2">
+                <a href="{{ url_for('main.listing_detail', listing_id=listing.id) }}"
+                   class="text-decoration-none text-dark stretched-link">
+                  {{ listing.title[:65] }}{% if listing.title|length > 65 %}…{% endif %}
+                </a>
+              </h6>
+              <div class="small text-muted lh-lg">
+                {% if listing.location %}
+                <div><i class="bi bi-geo-alt text-primary"></i> {{ listing.location }}</div>
+                {% endif %}
+                {% if listing.price_text %}
+                <div><i class="bi bi-tag text-success"></i> <strong class="text-dark">{{ listing.price_text }}</strong></div>
+                {% endif %}
+                {% if listing.lot_count %}
+                <div><i class="bi bi-grid-3x3"></i> {{ listing.lot_count }} lots/sites</div>
+                {% endif %}
+                {% if listing.acreage %}
+                <div><i class="bi bi-arrows-angle-expand"></i> {{ "%.1f"|format(listing.acreage) }} acres</div>
+                {% endif %}
+                {% if listing.cap_rate %}
+                <div><i class="bi bi-percent"></i> {{ "%.1f"|format(listing.cap_rate) }}% cap rate</div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="card-footer bg-transparent border-top-0 pt-0 pb-2 small text-muted">
+              <span class="badge bg-light text-dark">{{ listing.property_type|replace('_',' ')|title if listing.property_type else '—' }}</span>
+              <span class="float-end">{{ listing.created_at.strftime('%b %d') if listing.created_at else '' }}</span>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+          <div class="alert alert-info">No listings match your filters.</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- table view (hidden by default) -->
+    <div id="tableContainer" class="d-none">
+      <div class="table-responsive">
+        <table class="table table-hover table-sm small">
+          <thead class="table-dark">
+            <tr>
+              <th>Title</th><th>Price</th><th>Location</th><th>Type</th>
+              <th>Lots</th><th>Cap%</th><th>Source</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for listing in listings %}
+            <tr>
+              <td><a href="{{ url_for('main.listing_detail', listing_id=listing.id) }}">
+                {{ listing.title[:50] }}{% if listing.title|length > 50 %}…{% endif %}
+              </a></td>
+              <td class="text-nowrap">{{ listing.price_text or '—' }}</td>
+              <td>{{ listing.state or listing.location[:20] if listing.location else '—' }}</td>
+              <td>{{ listing.property_type|replace('_',' ') if listing.property_type else '—' }}</td>
+              <td>{{ listing.lot_count or '—' }}</td>
+              <td>{{ "%.1f"|format(listing.cap_rate) if listing.cap_rate else '—' }}</td>
+              <td>{{ listing.source }}</td>
+              <td>
+                <button class="btn btn-link btn-sm p-0 fav-btn" data-id="{{ listing.id }}">
+                  <i class="bi {{ 'bi-star-fill text-warning' if listing.is_favorite else 'bi-star' }}"></i>
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- pagination -->
+    {% if pagination.pages > 1 %}
+    <nav class="mt-3">
+      <ul class="pagination pagination-sm justify-content-center flex-wrap">
+        {% if pagination.has_prev %}
+        <li class="page-item">
+          <a class="page-link" href="{{ qlink('page', pagination.prev_num) }}">‹</a>
+        </li>
+        {% endif %}
+        {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if p %}
+          <li class="page-item {% if p == pagination.page %}active{% endif %}">
+            <a class="page-link" href="{{ qlink('page', p) }}">{{ p }}</a>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><span class="page-link">…</span></li>
+          {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="{{ qlink('page', pagination.next_num) }}">›</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

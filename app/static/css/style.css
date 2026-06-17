@@ -1,0 +1,51 @@
+:root {
+  --color-primary: #1a6b3c;
+}
+
+.bg-primary { background-color: var(--color-primary) !important; }
+.text-primary { color: var(--color-primary) !important; }
+.btn-primary { background-color: var(--color-primary); border-color: var(--color-primary); }
+.btn-primary:hover { background-color: #145530; border-color: #145530; }
+.btn-outline-primary { color: var(--color-primary); border-color: var(--color-primary); }
+.btn-outline-primary:hover { background-color: var(--color-primary); }
+
+body {
+  font-size: 0.92rem;
+  background: #f5f7f9;
+}
+
+.navbar-brand { font-size: 1.1rem; }
+
+/* listing cards */
+.listing-card { transition: box-shadow .15s; }
+.listing-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.12) !important; }
+
+.listing-thumb {
+  height: 160px;
+  object-fit: cover;
+}
+.listing-hero {
+  max-height: 360px;
+  object-fit: cover;
+}
+
+/* source badges */
+.src-badge { font-size: .7rem; }
+.src-bizbuysell { background: #0057b7; }
+.src-rvparkstore { background: #c0392b; }
+.src-mobilehomeparkstore { background: #8e44ad; }
+.src-loopnet { background: #2c3e50; }
+.src-mhvillage { background: #16a085; }
+.src-crexi { background: #e67e22; }
+.src-landwatch { background: #27ae60; }
+
+/* responsive table scroll on mobile */
+@media (max-width: 576px) {
+  .table-responsive { font-size: .8rem; }
+  .listing-thumb { height: 120px; }
+}
+
+/* tighten sidebar on small screens */
+@media (max-width: 767px) {
+  #filterForm .card-body { padding: .5rem; }
+}

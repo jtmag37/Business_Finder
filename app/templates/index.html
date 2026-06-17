@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — RV & MHP Finder{% endblock %}
+
+{% block content %}
+<h5 class="fw-bold mb-3"><i class="bi bi-speedometer2 me-2 text-primary"></i>Dashboard</h5>
+
+<!-- stat cards -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body text-center">
+        <div class="fs-1 fw-bold text-primary">{{ total }}</div>
+        <div class="small text-muted">Active Listings</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body text-center">
+        <div class="fs-1 fw-bold text-warning">{{ favorites }}</div>
+        <div class="small text-muted">Favorites</div>
+      </div>
+    </div>
+  </div>
+  {% for source, cnt in by_source %}
+  <div class="col-6 col-md-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-body text-center">
+        <div class="fs-2 fw-bold text-success">{{ cnt }}</div>
+        <div class="small text-muted">{{ source|title }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- by type breakdown -->
+{% if by_type %}
+<div class="row g-3 mb-4">
+  {% for ptype, cnt in by_type %}
+  <div class="col-6 col-md-3">
+    <div class="card border-start border-4 border-primary shadow-sm">
+      <div class="card-body py-2">
+        <div class="fw-semibold">{{ cnt }}</div>
+        <div class="small text-muted">{{ ptype|replace('_',' ')|title if ptype else 'Unknown' }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- recent listings -->
+<h6 class="fw-semibold mb-3">Recently Added</h6>
+<div class="row g-3 mb-4">
+  {% for listing in recent %}
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm listing-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-1">
+          <span class="badge bg-secondary">{{ listing.source }}</span>
+          {% if listing.is_favorite %}<i class="bi bi-star-fill text-warning"></i>{% endif %}
+        </div>
+        <h6 class="card-title mb-1">
+          <a href="{{ url_for('main.listing_detail', listing_id=listing.id) }}" class="text-decoration-none text-dark stretched-link">
+            {{ listing.title[:70] }}{% if listing.title|length > 70 %}…{% endif %}
+          </a>
+        </h6>
+        <div class="small text-muted">
+          {% if listing.location %}<i class="bi bi-geo-alt"></i> {{ listing.location }}<br>{% endif %}
+          {% if listing.price_text %}<i class="bi bi-tag"></i> {{ listing.price_text }}<br>{% endif %}
+          {% if listing.lot_count %}<i class="bi bi-grid-3x3"></i> {{ listing.lot_count }} lots/sites{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-12">
+    <p class="text-muted">No listings yet. <a href="{{ url_for('main.scraper_status') }}">Run a scrape</a> to get started.</p>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- scraper run log -->
+{% if last_runs %}
+<h6 class="fw-semibold mb-2">Recent Scraper Activity</h6>
+<div class="table-responsive">
+  <table class="table table-sm table-hover small">
+    <thead class="table-light">
+      <tr><th>Source</th><th>Started</th><th>Status</th><th>Found</th><th>New</th><th>Duration</th></tr>
+    </thead>
+    <tbody>
+      {% for run in last_runs %}
+      <tr>
+        <td>{{ run.source }}</td>
+        <td>{{ run.started_at.strftime('%m/%d %H:%M') }}</td>
+        <td>
+          {% if run.status == 'success' %}<span class="badge bg-success">ok</span>
+          {% elif run.status == 'failed' %}<span class="badge bg-danger" title="{{ run.error_message }}">err</span>
+          {% else %}<span class="badge bg-secondary">{{ run.status }}</span>{% endif %}
+        </td>
+        <td>{{ run.listings_found }}</td>
+        <td>{{ run.listings_new }}</td>
+        <td>{{ run.duration }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}
