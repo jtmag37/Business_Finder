@@ -1,0 +1,67 @@
+name: City Sprint iOS
+
+on:
+  push:
+    paths:
+      - "CitySprint/**"
+      - ".github/workflows/citysprint.yml"
+  pull_request:
+    paths:
+      - "CitySprint/**"
+  workflow_dispatch:
+
+concurrency:
+  group: citysprint-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  core-tests:
+    name: Game core unit tests
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app || true
+      - name: swift test
+        working-directory: CitySprint/Packages/CitySprintCore
+        run: swift test --parallel 2>&1 | tail -150
+
+  app:
+    name: Build app + unit & UI tests
+    runs-on: macos-15
+    timeout-minutes: 60
+    if: ${{ hashFiles('CitySprint/project.yml') != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app || true
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        working-directory: CitySprint
+        run: xcodegen generate
+      - name: Pick simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c "import json,sys;d=json.load(sys.stdin)['devices'];print(next(x['udid'] for k,v in d.items() if 'iOS' in k for x in v if x['name'].startswith('iPhone')))")
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Build and test
+        working-directory: CitySprint
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project CitySprint.xcodeproj \
+            -scheme CitySprint \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            CODE_SIGNING_ALLOWED=NO \
+            -resultBundlePath TestResults.xcresult 2>&1 | tail -250
+      - name: Upload results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults
+          path: CitySprint/TestResults.xcresult
