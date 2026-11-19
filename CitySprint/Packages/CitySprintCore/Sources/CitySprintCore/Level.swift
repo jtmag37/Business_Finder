@@ -129,6 +129,19 @@ public struct LevelDefinition: Codable, Equatable, Sendable {
     /// Sorted by `y`.
     public var entities: [LevelEntity]
 
+    public init(id: LevelID, city: CityID, index: Int, seed: UInt64, difficulty: Double, length: Double,
+                parTime: Double, weather: Weather, entities: [LevelEntity]) {
+        self.id = id
+        self.city = city
+        self.index = index
+        self.seed = seed
+        self.difficulty = difficulty
+        self.length = length
+        self.parTime = parTime
+        self.weather = weather
+        self.entities = entities
+    }
+
     public var isDaily: Bool { index < 0 }
 
     public var totalCoins: Int { entities.reduce(0) { $0 + ($1.kind == .coin ? 1 : 0) } }
