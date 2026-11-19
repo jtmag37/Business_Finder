@@ -1,0 +1,89 @@
+name: City Sprint iOS
+
+on:
+  push:
+    paths:
+      - "CitySprint/**"
+      - ".github/workflows/citysprint.yml"
+  pull_request:
+    paths:
+      - "CitySprint/**"
+  workflow_dispatch:
+
+concurrency:
+  group: citysprint-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  core-tests:
+    name: Game core unit tests
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app || true
+      - name: swift test
+        working-directory: CitySprint/Packages/CitySprintCore
+        run: |
+          set -o pipefail
+          swift test 2>&1 | tail -150
+
+  app:
+    name: Build app + unit & UI tests
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app || true
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        working-directory: CitySprint
+        run: xcodegen generate
+      - name: Pick simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c "import json,sys;d=json.load(sys.stdin)['devices'];print(next(x['udid'] for k,v in d.items() if 'iOS' in k for x in v if x['name'].startswith('iPhone')))")
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+      - name: Build and test
+        working-directory: CitySprint
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project CitySprint.xcodeproj \
+            -scheme CitySprint \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            CODE_SIGNING_ALLOWED=NO \
+            -resultBundlePath TestResults.xcresult 2>&1 | tee xcodebuild.log \
+            | grep -E "(error|warning): |Test Case .*(passed|failed)|Executed [0-9]+ test|\*\* " || true
+          grep -q "\*\* TEST SUCCEEDED \*\*" xcodebuild.log
+      - name: Export screenshots
+        if: always()
+        working-directory: CitySprint
+        run: |
+          mkdir -p screenshots
+          xcrun xcresulttool export attachments --path TestResults.xcresult --output-path screenshots || true
+          ls screenshots | head -50
+          # Small JPEG previews in the log for quick review without downloading artifacts.
+          for f in screenshots/*.png; do
+            [ -f "$f" ] || continue
+            sips -Z 640 -s format jpeg -s formatOptions 60 "$f" --out /tmp/preview.jpg >/dev/null 2>&1 || continue
+            echo "PREVIEW-BEGIN $(basename "$f")"; base64 -i /tmp/preview.jpg | tr -d '\n'; echo; echo "PREVIEW-END"
+          done
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: CitySprint/screenshots
+      - name: Upload results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults
+          path: CitySprint/TestResults.xcresult

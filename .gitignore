@@ -5,3 +5,11 @@ instance/
 .env
 *.db
 *.sqlite3
+
+# City Sprint (iOS)
+CitySprint/CitySprint.xcodeproj/
+CitySprint/Packages/CitySprintCore/.build/
+CitySprint/Packages/CitySprintCore/.swiftpm/
+*.xcresult
+DerivedData/
+xcuserdata/

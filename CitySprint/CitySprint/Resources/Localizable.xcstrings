@@ -1,0 +1,1466 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    " / ": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " / "
+          }
+        }
+      }
+    },
+    ")\n\n                        NavigationLink(value: Route.settings) {\n                            Label(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n\n                        NavigationLink(value: Route.settings) {\n                            Label("
+          }
+        }
+      }
+    },
+    ")\n\n                    HStack(spacing: 12) {\n                        NavigationLink(value: Route.garage) {\n                            Label(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n\n                    HStack(spacing: 12) {\n                        NavigationLink(value: Route.garage) {\n                            Label("
+          }
+        }
+      }
+    },
+    ")\n\n                    NavigationLink(value: Route.daily) {\n                        Label(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n\n                    NavigationLink(value: Route.daily) {\n                        Label("
+          }
+        }
+      }
+    },
+    ")\n\n                    if app.gameCenter.isAuthenticated {\n                        Button {\n                            app.gameCenter.showDashboard(leaderboardID: LeaderboardIDs.daily)\n                        } label: {\n                            Label(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n\n                    if app.gameCenter.isAuthenticated {\n                        Button {\n                            app.gameCenter.showDashboard(leaderboardID: LeaderboardIDs.daily)\n                        } label: {\n                            Label("
+          }
+        }
+      }
+    },
+    ")\n\n                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {\n                    ForEach(CosmeticCatalog.items(for: slot)) { item in\n                        CosmeticTile(item: item)\n                    }\n                }\n\n                SupporterSection()\n\n                Text(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n\n                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {\n                    ForEach(CosmeticCatalog.items(for: slot)) { item in\n                        CosmeticTile(item: item)\n                    }\n                }\n\n                SupporterSection()\n\n                Text("
+          }
+        }
+      }
+    },
+    ")\n                        .padding(.trailing, 12)\n                        .padding(.top, 52)\n                    }\n                    Spacer()\n                    controlsForAssistiveTech\n                }\n\n                if model.showTutorial {\n                    TutorialCard { model.dismissTutorial() }\n                        .transition(.opacity)\n                }\n\n                switch model.phase {\n                case .playing:\n                    EmptyView()\n                case .paused:\n                    PauseOverlay(title: model.title,\n                                 onResume: model.resume,\n                                 onRestart: model.retry,\n                                 onQuit: { onExit(nil) })\n                case .finished(let result, let outcome):\n                    ResultsView(result: result, outcome: outcome, attempts: model.attempts,\n                                hasNext: model.nextLevel() != nil,\n                                onRetry: model.retry,\n                                onNext: { onExit(model.nextLevel()) },\n                                onExit: { onExit(nil) })\n                }\n            }\n        }\n        .statusBarHidden()\n        .persistentSystemOverlays(.hidden)\n        .onChange(of: scenePhase) { _, phase in\n            if phase != .active { model.pause() }\n        }\n    }\n\n    /// On-screen buttons shown only when VoiceOver or Switch Control is\n    /// running, so the game can be played without gestures.\n    @ViewBuilder\n    private var controlsForAssistiveTech: some View {\n        if UIAccessibility.isVoiceOverRunning || UIAccessibility.isSwitchControlRunning {\n            HStack(spacing: 12) {\n                controlButton(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n                        .padding(.trailing, 12)\n                        .padding(.top, 52)\n                    }\n                    Spacer()\n                    controlsForAssistiveTech\n                }\n\n                if model.showTutorial {\n                    TutorialCard { model.dismissTutorial() }\n                        .transition(.opacity)\n                }\n\n                switch model.phase {\n                case .playing:\n                    EmptyView()\n                case .paused:\n                    PauseOverlay(title: model.title,\n                                 onResume: model.resume,\n                                 onRestart: model.retry,\n                                 onQuit: { onExit(nil) })\n                case .finished(let result, let outcome):\n                    ResultsView(result: result, outcome: outcome, attempts: model.attempts,\n                                hasNext: model.nextLevel() != nil,\n                                onRetry: model.retry,\n                                onNext: { onExit(model.nextLevel()) },\n                                onExit: { onExit(nil) })\n                }\n            }\n        }\n        .statusBarHidden()\n        .persistentSystemOverlays(.hidden)\n        .onChange(of: scenePhase) { _, phase in\n            if phase != .active { model.pause() }\n        }\n    }\n\n    /// On-screen buttons shown only when VoiceOver or Switch Control is\n    /// running, so the game can be played without gestures.\n    @ViewBuilder\n    private var controlsForAssistiveTech: some View {\n        if UIAccessibility.isVoiceOverRunning || UIAccessibility.isSwitchControlRunning {\n            HStack(spacing: 12) {\n                controlButton("
+          }
+        }
+      }
+    },
+    ")\n                    }\n\n                    if app.gameCenter.isAuthenticated {\n                        HStack(spacing: 12) {\n                            Button {\n                                app.gameCenter.showDashboard()\n                            } label: {\n                                Label(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n                    }\n\n                    if app.gameCenter.isAuthenticated {\n                        HStack(spacing: 12) {\n                            Button {\n                                app.gameCenter.showDashboard()\n                            } label: {\n                                Label("
+          }
+        }
+      }
+    },
+    ")\n                Button(action: onExit) {\n                    Label(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n                Button(action: onExit) {\n                    Label("
+          }
+        }
+      }
+    },
+    ")\n                Button(action: onRestart) { Label(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n                Button(action: onRestart) { Label("
+          }
+        }
+      }
+    },
+    ")\n                Button(role: .destructive, action: onQuit) { Label(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n                Button(role: .destructive, action: onQuit) { Label("
+          }
+        }
+      }
+    },
+    ")\n                Toggle(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n                Toggle("
+          }
+        }
+      }
+    },
+    ")\n                Toggle(isOn: $app.settings.colorblindSignals) {\n                    VStack(alignment: .leading) {\n                        Text(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n                Toggle(isOn: $app.settings.colorblindSignals) {\n                    VStack(alignment: .leading) {\n                        Text("
+          }
+        }
+      }
+    },
+    ")\n                Toggle(isOn: $app.settings.reduceMotion) {\n                    VStack(alignment: .leading) {\n                        Text(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n                Toggle(isOn: $app.settings.reduceMotion) {\n                    VStack(alignment: .leading) {\n                        Text("
+          }
+        }
+      }
+    },
+    ")\n            }\n            HStack(spacing: 10) {\n                Button(action: onRetry) {\n                    Label(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n            }\n            HStack(spacing: 10) {\n                Button(action: onRetry) {\n                    Label("
+          }
+        }
+      }
+    },
+    ")\n            } footer: {\n                Text(": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": ")\n            } footer: {\n                Text("
+          }
+        }
+      }
+    },
+    "A one-time purchase that supports development and adds three gold cosmetic items. It does not change gameplay.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A one-time purchase that supports development and adds three gold cosmetic items. It does not change gameplay."
+          }
+        }
+      }
+    },
+    "Accessibility": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accessibility"
+          }
+        }
+      }
+    },
+    "Achievements": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Achievements"
+          }
+        }
+      }
+    },
+    "Amsterdam": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Amsterdam"
+          }
+        }
+      }
+    },
+    "Assist mode": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assist mode"
+          }
+        }
+      }
+    },
+    "Assist mode: leaderboards only include unassisted rides.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assist mode: leaderboards only include unassisted rides."
+          }
+        }
+      }
+    },
+    "Attempts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attempts"
+          }
+        }
+      }
+    },
+    "Aurora": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aurora"
+          }
+        }
+      }
+    },
+    "Bikes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bikes"
+          }
+        }
+      }
+    },
+    "Brake": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Brake"
+          }
+        }
+      }
+    },
+    "Bright sun, light rail crossings and harbour traffic.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bright sun, light rail crossings and harbour traffic."
+          }
+        }
+      }
+    },
+    "Canal Orange": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canal Orange"
+          }
+        }
+      }
+    },
+    "Cape Green": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cape Green"
+          }
+        }
+      }
+    },
+    "Cape Town": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cape Town"
+          }
+        }
+      }
+    },
+    "Carbon Racer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carbon Racer"
+          }
+        }
+      }
+    },
+    "Category": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Category"
+          }
+        }
+      }
+    },
+    "City Sprint": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "City Sprint"
+          }
+        }
+      }
+    },
+    "City Sprint does not collect personal data, does not use analytics or advertising, and does not track you.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "City Sprint does not collect personal data, does not use analytics or advertising, and does not track you."
+          }
+        }
+      }
+    },
+    "Classic Red": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Classic Red"
+          }
+        }
+      }
+    },
+    "Classic White": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Classic White"
+          }
+        }
+      }
+    },
+    "Clean Rider": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clean Rider"
+          }
+        }
+      }
+    },
+    "Clear": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear"
+          }
+        }
+      }
+    },
+    "Climber Dots": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Climber Dots"
+          }
+        }
+      }
+    },
+    "Club Navy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Club Navy"
+          }
+        }
+      }
+    },
+    "Cobblestones": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cobblestones"
+          }
+        }
+      }
+    },
+    "Cobblestones slow you down. Weaving scooters everywhere.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cobblestones slow you down. Weaving scooters everywhere."
+          }
+        }
+      }
+    },
+    "Coins": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coins"
+          }
+        }
+      }
+    },
+    "Coins collected": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coins collected"
+          }
+        }
+      }
+    },
+    "Crashes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Crashes"
+          }
+        }
+      }
+    },
+    "Daily Challenge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily Challenge"
+          }
+        }
+      }
+    },
+    "Daily Grinder": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily Grinder"
+          }
+        }
+      }
+    },
+    "Data": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data"
+          }
+        }
+      }
+    },
+    "Dense crossings: lights and pedestrians at every block.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dense crossings: lights and pedestrians at every block."
+          }
+        }
+      }
+    },
+    "Equipped": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Equipped"
+          }
+        }
+      }
+    },
+    "Feedback": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Feedback"
+          }
+        }
+      }
+    },
+    "Fewer obstacles, a more forgiving hitbox, automatic braking at red lights and 15% more time for the par star. Leaderboards only include unassisted rides.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fewer obstacles, a more forgiving hitbox, automatic braking at red lights and 15% more time for the par star. Leaderboards only include unassisted rides."
+          }
+        }
+      }
+    },
+    "Finished!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finished!"
+          }
+        }
+      }
+    },
+    "Finishes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finishes"
+          }
+        }
+      }
+    },
+    "Game. Swipe left or right to change lanes, tap to sprint, swipe down to brake.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Game. Swipe left or right to change lanes, tap to sprint, swipe down to brake."
+          }
+        }
+      }
+    },
+    "Garage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Garage"
+          }
+        }
+      }
+    },
+    "Haptics": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haptics"
+          }
+        }
+      }
+    },
+    "Harbour Blue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harbour Blue"
+          }
+        }
+      }
+    },
+    "Headwind: lower cruising speed": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Headwind: lower cruising speed"
+          }
+        }
+      }
+    },
+    "Headwinds and potholes on the way to the mountain.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Headwinds and potholes on the way to the mountain."
+          }
+        }
+      }
+    },
+    "Heat drains stamina fast. Grab every water bottle.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heat drains stamina fast. Grab every water bottle."
+          }
+        }
+      }
+    },
+    "Heat: faster stamina drain": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heat: faster stamina drain"
+          }
+        }
+      }
+    },
+    "Helmets": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Helmets"
+          }
+        }
+      }
+    },
+    "How to ride": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "How to ride"
+          }
+        }
+      }
+    },
+    "Jerseys": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jerseys"
+          }
+        }
+      }
+    },
+    "Let's ride": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Let's ride"
+          }
+        }
+      }
+    },
+    "Loading…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading…"
+          }
+        }
+      }
+    },
+    "Locked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Locked"
+          }
+        }
+      }
+    },
+    "London": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "London"
+          }
+        }
+      }
+    },
+    "Mint Fixie": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mint Fixie"
+          }
+        }
+      }
+    },
+    "Move left": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move left"
+          }
+        }
+      }
+    },
+    "Move right": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move right"
+          }
+        }
+      }
+    },
+    "Near miss!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Near miss!"
+          }
+        }
+      }
+    },
+    "Near misses": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Near misses"
+          }
+        }
+      }
+    },
+    "Neon Nights": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neon Nights"
+          }
+        }
+      }
+    },
+    "New York": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New York"
+          }
+        }
+      }
+    },
+    "New best!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New best!"
+          }
+        }
+      }
+    },
+    "Next level": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Next level"
+          }
+        }
+      }
+    },
+    "Not available right now.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not available right now."
+          }
+        }
+      }
+    },
+    "One seeded course per day — the same for every rider in the world. Resets at midnight UTC.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "One seeded course per day — the same for every rider in the world. Resets at midnight UTC."
+          }
+        }
+      }
+    },
+    "Opens the city": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opens the city"
+          }
+        }
+      }
+    },
+    "Other cyclists and tram tracks — never switch lanes on the rails.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other cyclists and tram tracks — never switch lanes on the rails."
+          }
+        }
+      }
+    },
+    "Paris": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paris"
+          }
+        }
+      }
+    },
+    "Pause": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause"
+          }
+        }
+      }
+    },
+    "Paused": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paused"
+          }
+        }
+      }
+    },
+    "Penalties": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Penalties"
+          }
+        }
+      }
+    },
+    "Pothole!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pothole!"
+          }
+        }
+      }
+    },
+    "Privacy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy"
+          }
+        }
+      }
+    },
+    "Progress is stored on this device and, if enabled, in your private iCloud database. We never see it.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progress is stored on this device and, if enabled, in your private iCloud database. We never see it."
+          }
+        }
+      }
+    },
+    "Purchase pending approval.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Purchase pending approval."
+          }
+        }
+      }
+    },
+    "Rain Cape": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rain Cape"
+          }
+        }
+      }
+    },
+    "Rain: longer braking": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rain: longer braking"
+          }
+        }
+      }
+    },
+    "Red light +3s": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Red light +3s"
+          }
+        }
+      }
+    },
+    "Refreshed!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refreshed!"
+          }
+        }
+      }
+    },
+    "Reset all progress?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset all progress?"
+          }
+        }
+      }
+    },
+    "Reset everything": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset everything"
+          }
+        }
+      }
+    },
+    "Reset progress": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset progress"
+          }
+        }
+      }
+    },
+    "Restore Purchases": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore Purchases"
+          }
+        }
+      }
+    },
+    "Resume": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resume"
+          }
+        }
+      }
+    },
+    "Ride": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ride"
+          }
+        }
+      }
+    },
+    "Ride again": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ride again"
+          }
+        }
+      }
+    },
+    "Ride today's challenge": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ride today's challenge"
+          }
+        }
+      }
+    },
+    "Rides": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rides"
+          }
+        }
+      }
+    },
+    "Rio de Janeiro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rio de Janeiro"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "Slingshot!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slingshot!"
+          }
+        }
+      }
+    },
+    "Slipstream": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Slipstream"
+          }
+        }
+      }
+    },
+    "Sound effects": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sound effects"
+          }
+        }
+      }
+    },
+    "Sprint": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprint"
+          }
+        }
+      }
+    },
+    "Sprinter": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sprinter"
+          }
+        }
+      }
+    },
+    "Stars, unlocks and statistics on this device and in iCloud will be erased. Purchases are not affected.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stars, unlocks and statistics on this device and in iCloud will be erased. Purchases are not affected."
+          }
+        }
+      }
+    },
+    "Stars: finish the ride · beat the par time · grab 70% of coins with a clean ride (no potholes, no red lights).": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stars: finish the ride · beat the par time · grab 70% of coins with a clean ride (no potholes, no red lights)."
+          }
+        }
+      }
+    },
+    "Statistics": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Statistics"
+          }
+        }
+      }
+    },
+    "Steel Commuter": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Steel Commuter"
+          }
+        }
+      }
+    },
+    "Strong sun: sprinting tires you faster": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Strong sun: sprinting tires you faster"
+          }
+        }
+      }
+    },
+    "Sunset Tourer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunset Tourer"
+          }
+        }
+      }
+    },
+    "Supporter Black": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supporter Black"
+          }
+        }
+      }
+    },
+    "Supporter Gold": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supporter Gold"
+          }
+        }
+      }
+    },
+    "Supporter Pack": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supporter Pack"
+          }
+        }
+      }
+    },
+    "Swipe down to brake — stop for red lights": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swipe down to brake — stop for red lights"
+          }
+        }
+      }
+    },
+    "Swipe left or right to change lanes": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swipe left or right to change lanes"
+          }
+        }
+      }
+    },
+    "Sydney": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sydney"
+          }
+        }
+      }
+    },
+    "Sync progress with iCloud": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sync progress with iCloud"
+          }
+        }
+      }
+    },
+    "Tap to sprint (uses stamina)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to sprint (uses stamina)"
+          }
+        }
+      }
+    },
+    "Taxis, opening car doors and roadworks on a tight grid.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taxis, opening car doors and roadworks on a tight grid."
+          }
+        }
+      }
+    },
+    "Thank you for your support!": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thank you for your support!"
+          }
+        }
+      }
+    },
+    "Time": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Time"
+          }
+        }
+      }
+    },
+    "Today's ride": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today's ride"
+          }
+        }
+      }
+    },
+    "Tokyo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tokyo"
+          }
+        }
+      }
+    },
+    "Tropic": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tropic"
+          }
+        }
+      }
+    },
+    "Tuck in behind a bus, then pull out for a slingshot": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuck in behind a bus, then pull out for a slingshot"
+          }
+        }
+      }
+    },
+    "Turns off screen shake, speed lines, weather streaks and pop animations. Also follows the system setting.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Turns off screen shake, speed lines, weather streaks and pop animations. Also follows the system setting."
+          }
+        }
+      }
+    },
+    "Unlocked": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlocked"
+          }
+        }
+      }
+    },
+    "Uses an Okabe–Ito palette for hazards, coins and traffic lights. Lights also differ by shape and position.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uses an Okabe–Ito palette for hazards, coins and traffic lights. Lights also differ by shape and position."
+          }
+        }
+      }
+    },
+    "Wet roads mean longer braking. Draft the double-deckers.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wet roads mean longer braking. Draft the double-deckers."
+          }
+        }
+      }
+    },
+    "World Map": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "World Map"
+          }
+        }
+      }
+    },
+    "World Tour": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "World Tour"
+          }
+        }
+      }
+    },
+    "Your privacy": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your privacy"
+          }
+        }
+      }
+    },
+    "arrow.down": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "arrow.down"
+          }
+        }
+      }
+    },
+    "arrow.right": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "arrow.right"
+          }
+        }
+      }
+    },
+    "bolt.fill": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "bolt.fill"
+          }
+        }
+      }
+    },
+    "iCloud isn't available right now. Your progress is saved on this device and will sync later.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud isn't available right now. Your progress is saved on this device and will sync later."
+          }
+        }
+      }
+    },
+    "• Game Center (optional) is provided by Apple under Apple's privacy policy. Scores you submit are visible on leaderboards.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• Game Center (optional) is provided by Apple under Apple's privacy policy. Scores you submit are visible on leaderboards."
+          }
+        }
+      }
+    },
+    "• Progress is saved on your device. If iCloud sync is on, a copy is kept in your private iCloud database, which only you can access.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• Progress is saved on your device. If iCloud sync is on, a copy is kept in your private iCloud database, which only you can access."
+          }
+        }
+      }
+    },
+    "• Purchases are processed by Apple. We never see your payment details.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• Purchases are processed by Apple. We never see your payment details."
+          }
+        }
+      }
+    },
+    "• The game works fully offline.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "• The game works fully offline."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
