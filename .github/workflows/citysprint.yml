@@ -62,6 +62,19 @@ jobs:
             -resultBundlePath TestResults.xcresult 2>&1 | tee xcodebuild.log \
             | grep -E "(error|warning): |Test Case .*(passed|failed)|Executed [0-9]+ test|\*\* " || true
           grep -q "\*\* TEST SUCCEEDED \*\*" xcodebuild.log
+      - name: Export screenshots
+        if: always()
+        working-directory: CitySprint
+        run: |
+          mkdir -p screenshots
+          xcrun xcresulttool export attachments --path TestResults.xcresult --output-path screenshots || true
+          ls screenshots | head -50
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: CitySprint/screenshots
       - name: Upload results
         if: failure()
         uses: actions/upload-artifact@v4

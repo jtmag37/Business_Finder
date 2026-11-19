@@ -78,6 +78,11 @@ final class KeychainTests: XCTestCase {
         let keychain = KeychainStore(service: "citysprint.tests.\(UUID().uuidString)")
         let account = "probe"
         defer { try? keychain.remove(account) }
+        do {
+            _ = try keychain.data(for: account)
+        } catch KeychainStore.KeychainError.unexpectedStatus(let status) where status == errSecMissingEntitlement {
+            throw XCTSkip("Keychain needs a code-signed test host (CI builds unsigned).")
+        }
         XCTAssertNil(try keychain.data(for: account))
         try keychain.set(Data([1, 2, 3]), for: account)
         XCTAssertEqual(try keychain.data(for: account), Data([1, 2, 3]))
@@ -108,11 +113,13 @@ final class GameSceneTests: XCTestCase {
         for city in CityID.allCases {
             let (view, scene) = makeScene(level: LevelGenerator.level(city: city, index: 5))
             var t: TimeInterval = 0
+            var furthest = 0.0
             for _ in 0..<600 { // 10 seconds of frames
                 scene.update(t)
+                furthest = max(furthest, scene.sim.player.y)
                 t += 1.0 / 60
             }
-            XCTAssertGreaterThan(scene.sim.player.y, 20, "\(city) did not advance")
+            XCTAssertGreaterThan(furthest, 40, "\(city) did not advance")
             _ = view
         }
     }

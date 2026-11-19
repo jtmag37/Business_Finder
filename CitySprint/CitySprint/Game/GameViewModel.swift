@@ -32,9 +32,7 @@ final class GameViewModel: GameSceneDelegate {
         scene.gameDelegate = self
         scene.haptics = app.haptics
         scene.sound = app.sound
-        // SpriteView only applies `isPaused` when it is created, so the view
-        // model drives the scene's paused state directly.
-        scene.isPaused = showTutorial
+        scene.isFrozen = showTutorial
     }
 
     var title: String {
@@ -43,14 +41,13 @@ final class GameViewModel: GameSceneDelegate {
 
     func pause() {
         guard phase == .playing else { return }
-        scene.isPaused = true
+        scene.isFrozen = true
         phase = .paused
     }
 
     func resume() {
         guard phase == .paused else { return }
-        scene.resetClock()
-        scene.isPaused = false
+        scene.isFrozen = false
         phase = .playing
     }
 
@@ -58,13 +55,13 @@ final class GameViewModel: GameSceneDelegate {
         scene.restartFresh()
         attempts = 0
         scene.resetClock()
-        scene.isPaused = false
+        scene.isFrozen = false
         phase = .playing
     }
 
     func dismissTutorial() {
         scene.resetClock()
-        scene.isPaused = false
+        scene.isFrozen = false
         showTutorial = false
     }
 
@@ -76,7 +73,7 @@ final class GameViewModel: GameSceneDelegate {
 
     func gameSceneDidFinish(_ result: RunResult) {
         let outcome = app.record(result)
-        scene.isPaused = true
+        scene.isFrozen = true
         phase = .finished(result, outcome)
         if outcome.stars > 0 { app.sound.play(.star) }
     }

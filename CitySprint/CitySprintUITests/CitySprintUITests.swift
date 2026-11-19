@@ -110,4 +110,40 @@ final class CitySprintUITests: XCTestCase {
                       || app.otherElements["garageSlotPicker"].waitForExistence(timeout: 1))
         XCTAssertTrue(app.buttons["Classic Red"].exists)
     }
+
+    /// Captures store-style screenshots of real levels (kept as attachments;
+    /// CI exports them as an artifact).
+    func testCaptureScreenshots() {
+        launch(extra: ["-seedStars", "240", "-uiTestRealLevels"])
+        snapshot("01-home")
+        app.buttons["playButton"].tap()
+        XCTAssertTrue(app.buttons["city_london"].waitForExistence(timeout: 5))
+        snapshot("02-world-map")
+        for (city, code) in [("london", "lon"), ("tokyo", "tyo"), ("amsterdam", "ams"), ("paris", "par")] {
+            let card = app.buttons["city_\(city)"]
+            if !card.isHittable { app.swipeUp() }
+            card.tap()
+            let level = app.buttons["level_\(code)_4"]
+            XCTAssertTrue(level.waitForExistence(timeout: 5))
+            if city == "london" { snapshot("03-city") }
+            level.tap()
+            XCTAssertTrue(app.buttons["pauseButton"].waitForExistence(timeout: 5))
+            Thread.sleep(forTimeInterval: 4)
+            snapshot("04-ride-\(city)")
+            app.buttons["pauseButton"].tap()
+            app.buttons["quitButton"].tap()
+            app.navigationBars.buttons.element(boundBy: 0).tap()
+        }
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        app.buttons["garageButton"].tap()
+        XCTAssertTrue(app.buttons["Classic Red"].waitForExistence(timeout: 5))
+        snapshot("05-garage")
+    }
+
+    private func snapshot(_ name: String) {
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
 }

@@ -34,6 +34,13 @@ final class GameScene: SKScene {
     private(set) var sim: GameSimulation
     private(set) var attempts = 0
 
+    /// Freezes the simulation (pause menu, tutorial, results) while still
+    /// rendering. Independent of SpriteKit's own `isPaused`, which SwiftUI
+    /// and the system may toggle on their own.
+    var isFrozen = false {
+        didSet { if oldValue && !isFrozen { resetClock() } }
+    }
+
     var safeInsets: UIEdgeInsets = .zero {
         didSet { if oldValue != safeInsets { layoutHUD() } }
     }
@@ -532,6 +539,10 @@ final class GameScene: SKScene {
 
     override func update(_ currentTime: TimeInterval) {
         guard built else { return }
+        if isFrozen {
+            lastUpdate = currentTime
+            return
+        }
         let frame = min(0.1, max(0, currentTime - (lastUpdate ?? currentTime)))
         lastUpdate = currentTime
         elapsed += frame
@@ -839,7 +850,7 @@ final class GameScene: SKScene {
     // MARK: - Input
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let t = touches.first else { return }
+        guard !isFrozen, let t = touches.first else { return }
         touchStart = t.location(in: view)
         touchStartTime = t.timestamp
         touchConsumed = false
@@ -880,6 +891,7 @@ final class GameScene: SKScene {
 
     /// Keyboard / Switch Control / UI-test entry point for the same commands.
     func perform(_ command: PlayerCommand) {
+        guard !isFrozen else { return }
         sim.send(command)
     }
 }

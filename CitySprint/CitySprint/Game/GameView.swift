@@ -16,8 +16,7 @@ struct GameView: View {
     var body: some View {
         GeometryReader { geo in
             ZStack {
-                SpriteView(scene: model.scene, isPaused: model.phase != .playing || model.showTutorial,
-                           preferredFramesPerSecond: 60,
+                SpriteView(scene: model.scene, preferredFramesPerSecond: 60,
                            options: [.ignoresSiblingOrder], debugOptions: [])
                     .ignoresSafeArea()
                     .onAppear { model.scene.safeInsets = geo.safeAreaInsets.uiInsets }

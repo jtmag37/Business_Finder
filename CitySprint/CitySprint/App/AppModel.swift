@@ -111,7 +111,8 @@ final class AppModel {
 
     func play(city: CityID, index: Int) {
         guard isLevelUnlocked(city, index) else { return }
-        let level = AppConfig.isUITesting ? LevelGenerator.uiTestLevel(city: city) : LevelGenerator.level(city: city, index: index)
+        let useTestCourse = AppConfig.isUITesting && !AppConfig.uiTestRealLevels
+        let level = useTestCourse ? LevelGenerator.uiTestLevel(city: city) : LevelGenerator.level(city: city, index: index)
         activeGame = GameLaunch(level: level)
     }
 

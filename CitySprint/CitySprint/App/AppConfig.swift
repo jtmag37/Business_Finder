@@ -25,6 +25,9 @@ enum AppConfig {
     /// hermetic and never touch the network.
     static var appleServicesEnabled: Bool { !isUITesting && !isUnitTesting }
 
+    /// UI tests that need real generated levels (screenshots) pass this.
+    static let uiTestRealLevels = arguments.contains("-uiTestRealLevels")
+
     /// UI tests can pre-seed stars to unlock content: "-seedStars 30".
     static var seededStars: Int? {
         guard let i = arguments.firstIndex(of: "-seedStars"), i + 1 < arguments.count else { return nil }
