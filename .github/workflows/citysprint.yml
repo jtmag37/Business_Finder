@@ -34,7 +34,6 @@ jobs:
     name: Build app + unit & UI tests
     runs-on: macos-15
     timeout-minutes: 60
-    if: ${{ hashFiles('CitySprint/project.yml') != '' }}
     steps:
       - uses: actions/checkout@v4
       - name: Select Xcode
