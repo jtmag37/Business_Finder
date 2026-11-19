@@ -32,6 +32,9 @@ final class GameViewModel: GameSceneDelegate {
         scene.gameDelegate = self
         scene.haptics = app.haptics
         scene.sound = app.sound
+        // SpriteView only applies `isPaused` when it is created, so the view
+        // model drives the scene's paused state directly.
+        scene.isPaused = showTutorial
     }
 
     var title: String {
@@ -61,6 +64,7 @@ final class GameViewModel: GameSceneDelegate {
 
     func dismissTutorial() {
         scene.resetClock()
+        scene.isPaused = false
         showTutorial = false
     }
 

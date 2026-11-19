@@ -152,7 +152,7 @@ final class GameScene: SKScene {
     private func build() {
         guard size.width > 0, size.height > 0 else { return }
         built = true
-        laneW = min(size.width / 4.95, size.height / 9)
+        laneW = min(size.width / 5.6, size.height / 9)
         ppm = size.height / 40
         playerScreenOffset = -size.height * 0.3
         cameraXOffset = laneW * 0.375
@@ -331,9 +331,9 @@ final class GameScene: SKScene {
         progressFill.position = CGPoint(x: -barW / 2, y: top)
         timerLabel.horizontalAlignmentMode = .left
         timerLabel.position = CGPoint(x: -size.width / 2 + 16, y: top - 30)
-        coinLabel.horizontalAlignmentMode = .right
-        // Leave room for the SwiftUI pause button in the top-right corner.
-        coinLabel.position = CGPoint(x: size.width / 2 - 16, y: top - 30)
+        // Left column: the SwiftUI pause button owns the top-right corner.
+        coinLabel.horizontalAlignmentMode = .left
+        coinLabel.position = CGPoint(x: -size.width / 2 + 16, y: top - 30 - timerLabel.fontSize * 1.3)
         comboLabel.position = CGPoint(x: 0, y: top - 70)
         toastLabel.position = CGPoint(x: 0, y: top - 105)
         let stamW = size.width * 0.35

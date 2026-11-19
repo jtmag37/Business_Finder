@@ -59,7 +59,9 @@ jobs:
             -scheme CitySprint \
             -destination "id=${{ steps.sim.outputs.udid }}" \
             CODE_SIGNING_ALLOWED=NO \
-            -resultBundlePath TestResults.xcresult 2>&1 | tail -250
+            -resultBundlePath TestResults.xcresult 2>&1 | tee xcodebuild.log \
+            | grep -E "(error|warning): |Test Case .*(passed|failed)|Executed [0-9]+ test|\*\* " || true
+          grep -q "\*\* TEST SUCCEEDED \*\*" xcodebuild.log
       - name: Upload results
         if: failure()
         uses: actions/upload-artifact@v4
