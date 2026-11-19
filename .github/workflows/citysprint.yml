@@ -28,7 +28,9 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_16.4.app || true
       - name: swift test
         working-directory: CitySprint/Packages/CitySprintCore
-        run: swift test --parallel 2>&1 | tail -150
+        run: |
+          set -o pipefail
+          swift test 2>&1 | tail -150
 
   app:
     name: Build app + unit & UI tests

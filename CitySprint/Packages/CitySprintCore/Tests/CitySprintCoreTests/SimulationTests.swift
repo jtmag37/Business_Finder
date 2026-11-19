@@ -146,14 +146,24 @@ final class SimulationTests: XCTestCase {
 
     func testSprintRequiresStamina() {
         let sim = GameSimulation(level: TestLevels.make([], length: 2000))
-        for _ in 0..<6 {
+        var t = 0.0
+        while sim.player.stamina >= GameTuning.standard.minimumSprintStamina && t < 30 {
             sim.send(.sprint)
-            sim.run(seconds: 1.5)
+            sim.run(seconds: 0.2)
+            t += 0.2
         }
+        XCTAssertLessThan(t, 10, "sprinting should exhaust stamina within a few seconds")
+        // The current sprint ends as soon as stamina runs out.
+        var guardTime = 0.0
+        while sim.player.isSprinting && guardTime < 2 {
+            sim.run(seconds: 0.05)
+            guardTime += 0.05
+        }
+        XCTAssertFalse(sim.player.isSprinting)
         XCTAssertLessThan(sim.player.stamina, GameTuning.standard.minimumSprintStamina)
         sim.send(.sprint)
-        sim.run(seconds: 0.1)
-        XCTAssertFalse(sim.player.isSprinting)
+        sim.run(seconds: 0.05)
+        XCTAssertFalse(sim.player.isSprinting, "sprint must be refused when exhausted")
     }
 
     func testWaterRestoresStamina() {
