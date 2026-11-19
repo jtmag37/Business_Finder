@@ -69,6 +69,12 @@ jobs:
           mkdir -p screenshots
           xcrun xcresulttool export attachments --path TestResults.xcresult --output-path screenshots || true
           ls screenshots | head -50
+          # Small JPEG previews in the log for quick review without downloading artifacts.
+          for f in screenshots/*.png; do
+            [ -f "$f" ] || continue
+            sips -Z 640 -s format jpeg -s formatOptions 60 "$f" --out /tmp/preview.jpg >/dev/null 2>&1 || continue
+            echo "PREVIEW-BEGIN $(basename "$f")"; base64 -i /tmp/preview.jpg | tr -d '\n'; echo; echo "PREVIEW-END"
+          done
       - name: Upload screenshots
         if: always()
         uses: actions/upload-artifact@v4
