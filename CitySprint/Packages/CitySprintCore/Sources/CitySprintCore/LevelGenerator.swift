@@ -23,17 +23,27 @@ public enum LevelGenerator {
 
     /// The daily challenge: same seed (UTC date) for every player.
     public static func daily(dayKey: Int) -> LevelDefinition {
-        let seed = StableHash.fnv1a("citysprint.daily.\(generatorVersion).\(dayKey)")
-        let city = CityID.allCases[Int(seed % UInt64(CityID.allCases.count))]
+        let seed = dailySeed(dayKey: dayKey)
+        let city = dailyCity(dayKey: dayKey)
         return generate(id: .daily(dayKey: dayKey), city: city, index: -1,
                         seed: seed, difficulty: 0.55, length: 900)
     }
 
+    static func dailySeed(dayKey: Int) -> UInt64 {
+        StableHash.fnv1a("citysprint.daily.\(generatorVersion).\(dayKey)")
+    }
+
+    /// The daily city without generating the whole level (cheap, for menus).
+    public static func dailyCity(dayKey: Int) -> CityID {
+        CityID.allCases[Int(dailySeed(dayKey: dayKey) % UInt64(CityID.allCases.count))]
+    }
+
     /// Tiny obstacle-free level used by UI tests to exercise the results flow.
-    public static func uiTestLevel(city: CityID = .newYork) -> LevelDefinition {
+    public static func uiTestLevel(city: CityID = .newYork, daily: Bool = false) -> LevelDefinition {
         var entities: [LevelEntity] = []
         for i in 0..<5 { entities.append(LevelEntity(kind: .coin, lane: 1, y: 8 + Double(i) * 3)) }
-        return LevelDefinition(id: .city(city, index: 0), city: city, index: 0, seed: 0, difficulty: 0,
+        return LevelDefinition(id: daily ? .daily(dayKey: 20_000_101) : .city(city, index: 0), city: city,
+                               index: daily ? -1 : 0, seed: 0, difficulty: 0,
                                length: 40, parTime: 10, weather: .clear, entities: entities)
     }
 

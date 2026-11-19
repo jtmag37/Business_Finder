@@ -116,7 +116,7 @@ final class AppModel {
     }
 
     func playDaily() {
-        let level = AppConfig.isUITesting ? LevelGenerator.uiTestLevel() : DailyChallenge.level(for: Date())
+        let level = AppConfig.isUITesting ? LevelGenerator.uiTestLevel(daily: true) : DailyChallenge.level(for: Date())
         activeGame = GameLaunch(level: level)
     }
 

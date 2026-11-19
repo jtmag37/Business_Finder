@@ -33,6 +33,7 @@ targets:
       - path: CitySprint
         excludes:
           - "Resources/Info.plist"
+          - "Resources/CitySprint.storekit"
     dependencies:
       - package: CitySprintCore
       - sdk: SpriteKit.framework
